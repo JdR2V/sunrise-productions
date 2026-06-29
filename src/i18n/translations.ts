@@ -74,7 +74,7 @@ export const translations = {
           role: "Solo Dev",
           featured: false,
         },
-        {
+        /* {
           id: "xp-devlog",
           title: "XP Devlog",
           desc: "Windows XP-aesthetic dev blog with Astro content collections, dynamic routing, and tag filtering.",
@@ -84,7 +84,7 @@ export const translations = {
           url: "https://github.com/JdR2V",
           role: "Solo Dev",
           featured: false,
-        },
+        }, */
       ],
     },
     mission: {
@@ -186,7 +186,7 @@ export const translations = {
           role: "Desarrollo Solo",
           featured: false,
         },
-        {
+        /* {
           id: "xp-devlog",
           title: "XP Devlog",
           desc: "Blog con estética Windows XP, Astro content collections, rutas dinámicas y filtrado por etiquetas.",
@@ -196,7 +196,7 @@ export const translations = {
           url: "https://github.com/JdR2V",
           role: "Desarrollo Solo",
           featured: false,
-        },
+        }, */
       ],
     },
     mission: {
