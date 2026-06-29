@@ -1,0 +1,294 @@
+---
+import type { Lang } from "../i18n/translations";
+import { translations } from "../i18n/translations";
+interface Props {
+    lang: Lang;
+}
+const { lang } = Astro.props;
+const t = translations[lang].nav;
+---
+
+<nav id="nav" aria-label="Main navigation">
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="nav-inner">
+        <a href="#hero" class="logo" aria-label="Sunrise Productions home">
+            <!--<div class="logo-icon" aria-hidden="true">&lt;/&gt;</div>
+      <span class="logo-text">SUNRISE PRODUCTIONS</span>-->
+            <img
+                src="../public/logo-v.png"
+                alt="Sunrise Productions logo"
+                class="logo-icon"
+                aria-hidden="true"
+                alt=""
+            />
+        </a>
+        <div class="nav-links">
+            <a href="#projects" class="nav-link" data-i18n="nav.work"
+                >{t.work}</a
+            >
+            <a href="#mission" class="nav-link" data-i18n="nav.about"
+                >{t.about}</a
+            >
+            <div
+                class="lang-toggle"
+                role="group"
+                aria-label="Language selector"
+            >
+                <button
+                    id="btn-en"
+                    class={lang === "en" ? "lang-btn active" : "lang-btn"}
+                    data-lang="en">EN</button
+                >
+                <button
+                    id="btn-es"
+                    class={lang === "es" ? "lang-btn active" : "lang-btn"}
+                    data-lang="es">ES</button
+                >
+            </div>
+            <button
+                id="theme-toggle"
+                class="theme-btn"
+                aria-label="Toggle colour scheme"
+            >
+                <span id="theme-icon" aria-hidden="true">🌙</span>
+                <span id="theme-label">Dark</span>
+            </button>
+            <a href="#contact" class="nav-cta" data-i18n="nav.contact"
+                >{t.contact}</a
+            >
+        </div>
+        <button
+            class="hamburger"
+            id="hamburger"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+        >
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <a href="#projects" class="mobile-link" data-i18n="nav.work">{t.work}</a
+        >
+        <a href="#mission" class="mobile-link" data-i18n="nav.about"
+            >{t.about}</a
+        >
+        <a href="#contact" class="mobile-link" data-i18n="nav.contact"
+            >{t.contact}</a
+        >
+    </div>
+</nav>
+
+<style>
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        border-bottom: 1px solid #1a1a1a;
+    }
+    .nav-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+    .logo-icon {
+        width: 320px;
+        height: 180px;
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 13px;
+        color: var(--black);
+    }
+    .logo-text {
+        font-weight: 900;
+        font-size: 0.72rem;
+        letter-spacing: 0.15em;
+        color: #fff;
+        white-space: nowrap;
+    }
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .nav-link {
+        font-size: 0.8rem;
+        color: var(--nav-muted);
+        padding: 6px 12px;
+        border-radius: var(--radius-sm);
+        transition: color 0.2s;
+    }
+    .nav-link:hover {
+        color: #fff;
+    }
+    .lang-toggle {
+        display: flex;
+        border: 1px solid #333;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 0 0.25rem;
+    }
+    .lang-btn {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: transparent;
+        color: #888;
+        border: none;
+        transition:
+            background 0.2s,
+            color 0.2s;
+        line-height: 1;
+    }
+    .lang-btn.active {
+        background: var(--yellow);
+        color: var(--black);
+    }
+    .theme-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid #333;
+        background: transparent;
+        color: #888;
+        font-size: 0.7rem;
+        font-weight: 700;
+        transition:
+            border-color 0.2s,
+            color 0.2s;
+    }
+    .theme-btn:hover {
+        border-color: var(--yellow);
+        color: #fff;
+    }
+    .nav-cta {
+        padding: 7px 16px;
+        background: var(--yellow);
+        color: var(--black);
+        font-size: 0.78rem;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        transition: opacity 0.2s;
+        margin-left: 0.25rem;
+    }
+    .nav-cta:hover {
+        opacity: 0.85;
+    }
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: transparent;
+        border: none;
+        padding: 4px;
+    }
+    .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+    }
+    .mobile-menu {
+        display: none;
+        flex-direction: column;
+        padding: 0.5rem 1.5rem 1rem;
+        border-top: 1px solid #1a1a1a;
+    }
+    .mobile-menu.open {
+        display: flex;
+    }
+    .mobile-link {
+        padding: 10px 0;
+        color: var(--nav-muted);
+        font-size: 0.9rem;
+        border-bottom: 1px solid #1a1a1a;
+    }
+    .mobile-link:last-child {
+        border-bottom: none;
+    }
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+        .hamburger {
+            display: flex;
+        }
+        .logo-text {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    const root = document.documentElement;
+    const themeBtn = document.getElementById("theme-toggle")!;
+    const themeIcon = document.getElementById("theme-icon")!;
+    const themeLabel = document.getElementById("theme-label")!;
+    const btnEn = document.getElementById("btn-en") as HTMLButtonElement;
+    const btnEs = document.getElementById("btn-es") as HTMLButtonElement;
+
+    const saved = localStorage.getItem("sp-theme");
+    const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+    ).matches;
+    let dark = saved ? saved === "dark" : prefersDark;
+
+    function applyTheme(d: boolean) {
+        root.setAttribute("data-theme", d ? "dark" : "light");
+        themeIcon.textContent = d ? "🌙" : "☀️";
+        themeLabel.textContent = d ? "Dark" : "Light";
+        localStorage.setItem("sp-theme", d ? "dark" : "light");
+    }
+    applyTheme(dark);
+    themeBtn.addEventListener("click", () => {
+        dark = !dark;
+        applyTheme(dark);
+    });
+
+    function setLang(lang: "en" | "es") {
+        [btnEn, btnEs].forEach((b) => {
+            const isActive = b.dataset.lang === lang;
+            b.classList.toggle("active", isActive);
+            b.setAttribute("aria-pressed", String(isActive));
+        });
+        localStorage.setItem("sp-lang", lang);
+        document.dispatchEvent(new CustomEvent("sp:lang", { detail: lang }));
+    }
+    const savedLang = (localStorage.getItem("sp-lang") as "en" | "es") ?? "es";
+    setLang(savedLang);
+    btnEn.addEventListener("click", () => setLang("en"));
+    btnEs.addEventListener("click", () => setLang("es"));
+
+    const hamburger = document.getElementById("hamburger")!;
+    const mobileMenu = document.getElementById("mobile-menu")!;
+    hamburger.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("open");
+        hamburger.setAttribute("aria-expanded", String(open));
+        mobileMenu.setAttribute("aria-hidden", String(!open));
+    });
+    mobileMenu.querySelectorAll(".mobile-link").forEach((l) =>
+        l.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            hamburger.setAttribute("aria-expanded", "false");
+            mobileMenu.setAttribute("aria-hidden", "true");
+        }),
+    );
+</script>

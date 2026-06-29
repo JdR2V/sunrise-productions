@@ -1,0 +1,184 @@
+---
+import type { Lang } from "../i18n/translations";
+import { translations } from "../i18n/translations";
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = translations[lang].projects;
+---
+
+<section id="projects" aria-labelledby="projects-title">
+  <div class="section-inner">
+    <p class="section-label" data-i18n="projects.sectionLabel">{t.sectionLabel}</p>
+    <h2 class="section-title" id="projects-title" data-i18n="projects.sectionTitle">{t.sectionTitle}</h2>
+    <div class="section-bar"></div>
+
+    <!-- Filters -->
+    <div class="filter-row" role="group" aria-label="Filter projects">
+      <button class="filter-pill active" data-filter="all"  data-i18n="projects.filters.all">{t.filters.all}</button>
+      <button class="filter-pill"        data-filter="games" data-i18n="projects.filters.games">{t.filters.games}</button>
+      <button class="filter-pill"        data-filter="web"   data-i18n="projects.filters.web">{t.filters.web}</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="projects-grid" id="projects-grid">
+      {t.items.map((p) => (
+        <a
+          href={p.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={`project-card${p.featured ? " featured" : ""}`}
+          data-category={p.category}
+          data-id={p.id}
+          aria-label={`${p.title} — ${p.role}`}
+        >
+          <div class="card-thumb">
+            <span class="card-icon" aria-hidden="true">
+              {p.category === "games" ? "🎮" : "💻"}
+            </span>
+            {p.featured && <span class="featured-badge" data-i18n-featured-badge="true">{lang === "es" ? "Destacado" : "Featured"}</span>}
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">{p.title}</h3>
+            <p class="card-desc" data-id={`desc-${p.id}`}>{p.desc}</p>
+            <p class="card-role">{p.role}</p>
+            <div class="card-tags">
+              {p.tags.map(tag => <span class="tag">{tag}</span>)}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+#projects {
+  background: var(--bg);
+  padding: 5rem 1.5rem;
+}
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filter-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.filter-pill {
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.filter-pill.active {
+  background: var(--black);
+  color: var(--yellow);
+  border-color: var(--black);
+}
+[data-theme="dark"] .filter-pill.active {
+  background: var(--yellow);
+  color: var(--black);
+  border-color: var(--yellow);
+}
+.filter-pill:hover:not(.active) { border-color: var(--text-2); color: var(--text); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.project-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s, transform 0.25s;
+  will-change: transform;
+}
+.project-card:hover { border-color: var(--yellow); transform: translateY(-4px); }
+.project-card.featured { border-color: var(--yellow); border-width: 1.5px; }
+
+.card-thumb {
+  height: 140px;
+  background: var(--bg-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.project-card.featured .card-thumb { background: var(--yellow); }
+.card-icon { font-size: 3rem; opacity: 0.35; }
+.project-card.featured .card-icon { opacity: 0.25; }
+
+.featured-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--black);
+  color: var(--yellow);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 3px;
+}
+
+.card-body { padding: 1rem 1.1rem 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+.card-title { font-size: 0.95rem; font-weight: 900; color: var(--text); }
+.card-desc  { font-size: 0.78rem; color: var(--text-2); line-height: 1.55; flex: 1; }
+.card-role  { font-size: 0.68rem; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; }
+.card-tags  { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.2rem; }
+
+/* Hidden via filter */
+.project-card.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .projects-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── Scroll reveal ─────────────────────────────────────────
+  gsap.from(".project-card", {
+    scrollTrigger: {
+      trigger: "#projects-grid",
+      start: "top 85%",
+    },
+    y: 40,
+    opacity: 0,
+    duration: 0.6,
+    stagger: 0.08,
+    ease: "power3.out",
+  });
+
+  // ── Filter ────────────────────────────────────────────────
+  const pills = document.querySelectorAll<HTMLButtonElement>(".filter-pill");
+  const cards = document.querySelectorAll<HTMLElement>(".project-card");
+
+  pills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      pills.forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      const filter = pill.dataset.filter!;
+      cards.forEach(card => {
+        const match = filter === "all" || card.dataset.category === filter;
+        card.classList.toggle("hidden", !match);
+      });
+    });
+  });
+</script>

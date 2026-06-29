@@ -1,0 +1,436 @@
+---
+import type { Lang } from "../i18n/translations";
+import { translations } from "../i18n/translations";
+interface Props {
+    lang: Lang;
+}
+const { lang } = Astro.props;
+const t = translations[lang];
+const slides = t.projects.items.slice(0, 4);
+---
+
+<section id="hero" aria-label="Hero">
+    <div class="hero-inner">
+        <!-- LEFT: carousel -->
+        <div class="carousel-wrap">
+            <div class="carousel" id="carousel" aria-live="polite">
+                {
+                    slides.map((s, i) => (
+                        <div
+                            class={`slide${i === 0 ? " active" : ""}`}
+                            data-index={i}
+                            aria-hidden={i !== 0 ? "true" : "false"}
+                        >
+                            <div class="slide-thumb">
+                                <div class="slide-icon" aria-hidden="true">
+                                    <img
+                                        src={s.image}
+                                        alt={s.title}
+                                        class="slide-img"
+                                    />
+                                </div>
+                            </div>
+                            <div class="slide-badge">
+                                <span
+                                    class="badge-label"
+                                    data-i18n-featured="true"
+                                >
+                                    {lang === "es" ? "DESTACADO" : "FEATURED"}
+                                </span>
+                                <span class="slide-title">{s.title}</span>
+                                <span class="slide-role">{s.role}</span>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+
+            <!-- Controls -->
+            <div class="carousel-controls">
+                <span class="slide-counter" id="slide-counter"
+                    >01 / 0{slides.length}</span
+                >
+                <div
+                    class="carousel-dots"
+                    id="carousel-dots"
+                    role="tablist"
+                    aria-label="Carousel slides"
+                >
+                    {
+                        slides.map((_, i) => (
+                            <button
+                                class={`dot${i === 0 ? " active" : ""}`}
+                                role="tab"
+                                aria-selected={i === 0}
+                                aria-label={`Slide ${i + 1}`}
+                                data-dot={i}
+                            />
+                        ))
+                    }
+                </div>
+                <div class="carousel-arrows">
+                    <button id="prev-btn" aria-label="Previous slide">←</button>
+                    <button id="next-btn" aria-label="Next slide">→</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: headline + CTA -->
+        <div class="hero-text">
+            <p class="hero-label" data-i18n="hero.label">{t.hero.label}</p>
+            <h1 class="hero-h1">
+                <span data-i18n="hero.headline1">{t.hero.headline1}</span><br />
+                <span class="hero-h1-accent" data-i18n="hero.headline2"
+                    >{t.hero.headline2}</span
+                ><br />
+                <span data-i18n="hero.headline3">{t.hero.headline3}</span>
+            </h1>
+            <p class="hero-sub" data-i18n="hero.sub">{t.hero.sub}</p>
+            <div class="hero-ctas">
+                <a
+                    href="#projects"
+                    class="btn-primary"
+                    data-i18n="hero.ctaPrimary">{t.hero.ctaPrimary} →</a
+                >
+                <a
+                    href="#mission"
+                    class="btn-outline"
+                    data-i18n="hero.ctaSecondary">{t.hero.ctaSecondary}</a
+                >
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-hint" aria-hidden="true">
+        <div class="scroll-line"></div>
+        <span>scroll</span>
+    </div>
+</section>
+
+<style>
+    #hero {
+        background: var(--yellow);
+        padding: 4rem 1.5rem 3rem;
+        position: relative;
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hero-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* ── Carousel ─────────────────────────────────────────── */
+    .carousel-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .carousel {
+        position: relative;
+        background: var(--black);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+    }
+
+    .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+    .slide.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .slide-thumb {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #111;
+    }
+    .slide-icon {
+        font-size: 5rem;
+        opacity: 0.4;
+    }
+
+    .slide-badge {
+        padding: 1rem 1.25rem;
+        background: rgba(13, 13, 13, 0.92);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .badge-label {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        color: var(--yellow);
+    }
+    .slide-title {
+        font-size: 1rem;
+        font-weight: 900;
+        color: #fff;
+    }
+    .slide-role {
+        font-size: 0.72rem;
+        color: #888;
+    }
+
+    /* Controls */
+    .carousel-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .slide-counter {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--black);
+        opacity: 0.6;
+    }
+
+    .carousel-dots {
+        display: flex;
+        gap: 6px;
+        flex: 1;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--black);
+        opacity: 0.25;
+        border: none;
+        padding: 0;
+        transition:
+            opacity 0.2s,
+            transform 0.2s;
+    }
+    .dot.active {
+        opacity: 1;
+        transform: scale(1.25);
+    }
+
+    .carousel-arrows {
+        display: flex;
+        gap: 6px;
+    }
+    .carousel-arrows button {
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-sm);
+        background: var(--black);
+        color: var(--yellow);
+        border: none;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s;
+    }
+    .carousel-arrows button:hover {
+        opacity: 0.75;
+    }
+
+    /* ── Hero text ────────────────────────────────────────── */
+    .hero-text {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .hero-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--black);
+        opacity: 0.7;
+    }
+
+    .hero-h1 {
+        font-size: clamp(2.4rem, 5vw, 3.8rem);
+        color: var(--black);
+        line-height: 1;
+    }
+    .hero-h1-accent {
+        color: var(--black);
+        opacity: 0.55;
+    }
+
+    .hero-sub {
+        font-size: 0.95rem;
+        color: #3a2800;
+        line-height: 1.65;
+        max-width: 38ch;
+    }
+
+    .hero-ctas {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+        padding: 12px 22px;
+        background: var(--black);
+        color: var(--yellow);
+        font-size: 0.82rem;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        transition: opacity 0.2s;
+    }
+    .btn-primary:hover {
+        opacity: 0.8;
+    }
+
+    .btn-outline {
+        padding: 12px 22px;
+        background: transparent;
+        color: var(--black);
+        font-size: 0.82rem;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        border: 2px solid var(--black);
+        transition:
+            background 0.2s,
+            color 0.2s;
+    }
+    .btn-outline:hover {
+        background: var(--black);
+        color: var(--yellow);
+    }
+
+    /* ── Scroll hint ──────────────────────────────────────── */
+    .scroll-hint {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        opacity: 0.45;
+    }
+    .scroll-line {
+        width: 1px;
+        height: 28px;
+        background: var(--black);
+        animation: scrollPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+        0%,
+        100% {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scaleY(0.5);
+            opacity: 0.4;
+        }
+    }
+    .scroll-hint span {
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--black);
+    }
+
+    @media (max-width: 768px) {
+        .hero-inner {
+            grid-template-columns: 1fr;
+        }
+        .hero-text {
+            order: -1;
+        }
+        #hero {
+            min-height: unset;
+            padding: 3rem 1.5rem 2.5rem;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+
+    // ── Carousel ─────────────────────────────────────────────
+    const slides = Array.from(document.querySelectorAll<HTMLElement>(".slide"));
+    const dots = Array.from(
+        document.querySelectorAll<HTMLButtonElement>(".dot"),
+    );
+    const counter = document.getElementById("slide-counter")!;
+    const prevBtn = document.getElementById("prev-btn")!;
+    const nextBtn = document.getElementById("next-btn")!;
+    let current = 0;
+    let autoTimer: ReturnType<typeof setInterval>;
+
+    function goTo(idx: number) {
+        const prev = current;
+        current = (idx + slides.length) % slides.length;
+        slides[prev].classList.remove("active");
+        slides[prev].setAttribute("aria-hidden", "true");
+        slides[current].classList.add("active");
+        slides[current].setAttribute("aria-hidden", "false");
+        dots[prev].classList.remove("active");
+        dots[prev].setAttribute("aria-selected", "false");
+        dots[current].classList.add("active");
+        dots[current].setAttribute("aria-selected", "true");
+        counter.textContent = `0${current + 1} / 0${slides.length}`;
+    }
+
+    function startAuto() {
+        autoTimer = setInterval(() => goTo(current + 1), 4000);
+    }
+    function resetAuto() {
+        clearInterval(autoTimer);
+        startAuto();
+    }
+
+    prevBtn.addEventListener("click", () => {
+        goTo(current - 1);
+        resetAuto();
+    });
+    nextBtn.addEventListener("click", () => {
+        goTo(current + 1);
+        resetAuto();
+    });
+    dots.forEach((d, i) =>
+        d.addEventListener("click", () => {
+            goTo(i);
+            resetAuto();
+        }),
+    );
+    startAuto();
+
+    // ── Hero GSAP entrance ────────────────────────────────────
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.from(".hero-label", { y: 20, opacity: 0, duration: 0.6 })
+        .from(
+            ".hero-h1 span",
+            { y: 30, opacity: 0, duration: 0.7, stagger: 0.12 },
+            "-=0.3",
+        )
+        .from(".hero-sub", { y: 20, opacity: 0, duration: 0.6 }, "-=0.4")
+        .from(".hero-ctas", { y: 20, opacity: 0, duration: 0.5 }, "-=0.3")
+        .from(".carousel-wrap", { x: 40, opacity: 0, duration: 0.8 }, "<0.2");
+</script>

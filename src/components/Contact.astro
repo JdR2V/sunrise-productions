@@ -1,0 +1,236 @@
+---
+import type { Lang } from "../i18n/translations";
+import { translations } from "../i18n/translations";
+interface Props {
+    lang: Lang;
+}
+const { lang } = Astro.props;
+const t = translations[lang].contact;
+const CONTACT_EMAIL = "jdr2v57@protonmail.com";
+---
+
+<section id="contact" aria-labelledby="contact-title">
+    <div class="section-inner">
+        <div class="contact-header">
+            <p class="section-label" data-i18n="contact.sectionLabel">
+                {t.sectionLabel}
+            </p>
+            <h2
+                class="section-title"
+                id="contact-title"
+                data-i18n="contact.sectionTitle"
+            >
+                {t.sectionTitle}
+            </h2>
+            <div class="section-bar" style="margin: 0.4rem auto 0;"></div>
+        </div>
+
+        <form
+            class="contact-form"
+            id="contact-form"
+            action={`mailto:${CONTACT_EMAIL}`}
+            method="get"
+            enctype="text/plain"
+            aria-label="Contact form"
+        >
+            <div class="form-row">
+                <div class="form-group">
+                    <label
+                        for="name"
+                        class="sr-only"
+                        data-i18n="contact.namePlaceholder"
+                        >{t.namePlaceholder}</label
+                    >
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        class="form-input"
+                        placeholder={t.namePlaceholder}
+                        required
+                        autocomplete="name"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="email" class="sr-only">Email</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="form-input"
+                        placeholder={t.emailPlaceholder}
+                        required
+                        autocomplete="email"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label
+                    for="message"
+                    class="sr-only"
+                    data-i18n="contact.messagePlaceholder"
+                    >{t.messagePlaceholder}</label
+                >
+                <textarea
+                    id="message"
+                    name="body"
+                    class="form-textarea"
+                    placeholder={t.messagePlaceholder}
+                    rows="5"
+                    required></textarea>
+            </div>
+
+            <button
+                type="submit"
+                class="form-submit"
+                data-i18n="contact.submit"
+            >
+                {t.submit} →
+            </button>
+        </form>
+
+        <p class="social-note">
+            <span data-i18n="contact.orReach">{t.orReach}</span>
+            <a
+                href="https://github.com/JdR2V"
+                target="_blank"
+                rel="noopener noreferrer">GitHub</a
+            >
+            &middot;
+            <a
+                href="https://www.linkedin.com/in/juan-daniel-rubio/"
+                target="_blank"
+                rel="noopener noreferrer">LinkedIn</a
+            >
+        </p>
+    </div>
+</section>
+
+<style>
+    #contact {
+        background: var(--bg);
+        padding: 5rem 1.5rem;
+    }
+    .section-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .contact-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .contact-form {
+        max-width: 520px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-input,
+    .form-textarea {
+        width: 100%;
+        padding: 11px 14px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: var(--bg-3);
+        color: var(--text);
+        font-size: 0.85rem;
+        font-family: inherit;
+        transition: border-color 0.2s;
+        outline: none;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: var(--text-3);
+    }
+    .form-input:focus,
+    .form-textarea:focus {
+        border-color: var(--yellow);
+    }
+    .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-submit {
+        padding: 13px;
+        background: var(--yellow);
+        color: var(--black);
+        font-size: 0.88rem;
+        font-weight: 700;
+        border: none;
+        border-radius: var(--radius-md);
+        transition:
+            opacity 0.2s,
+            transform 0.15s;
+        margin-top: 0.25rem;
+    }
+    .form-submit:hover {
+        opacity: 0.88;
+    }
+    .form-submit:active {
+        transform: scale(0.98);
+    }
+
+    .social-note {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--text-3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+    .social-note a {
+        color: var(--amber);
+        font-weight: 700;
+    }
+    .social-note a:hover {
+        color: var(--yellow);
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.from(".contact-form", {
+        scrollTrigger: { trigger: "#contact", start: "top 80%" },
+        y: 30,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+    });
+</script>
