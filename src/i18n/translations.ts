@@ -1,5 +1,7 @@
 export type Lang = "en" | "es";
 
+const BASE_PATH = "/sunrise-productions";
+
 export const translations = {
   en: {
     nav: { work: "Work", about: "About", contact: "Contact" },
@@ -23,7 +25,7 @@ export const translations = {
           desc: "A cozy game about running a lost & found office before the Spring Festival. Created for Cozy Spring Jam 2026.",
           tags: ["Godot", "Pixel Art", "Jam"],
           category: "games",
-          image: "/sunrise-productions/scrs-3.png",
+          image: "${BASE_PATH}scrs-3.png",
           url: "https://ticked-dev.itch.io/the-little-lost-office",
           role: "Pixel Artist / Writer",
           featured: true,
