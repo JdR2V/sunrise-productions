@@ -1,10 +1,10 @@
 ---
-import Nav      from "../components/Nav.astro";
-import Hero     from "../components/Hero.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
 import Projects from "../components/Projects.astro";
-import Mission  from "../components/Mission.astro";
-import Contact  from "../components/Contact.astro";
-import Footer   from "../components/Footer.astro";
+import Mission from "../components/Mission.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
 // Default lang — client script will swap based on localStorage
@@ -13,98 +13,145 @@ const defaultLang = "es" as const;
 
 <!doctype html>
 <html lang={defaultLang} data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Sunrise Productions — indie game and software studio from Cali, Colombia. We build interactive experiences with code and imagination." />
-    <meta name="theme-color" content="#ffc107" />
-    <link rel="icon" type="image/svg+xml" href="/sunrise-productions/favicon.svg" />
-    <title>Sunrise Productions — Games & Software</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Sunrise Productions — indie game and software studio from Cali, Colombia. We build interactive experiences with code and imagination."
+        />
+        <meta name="theme-color" content="#ffc107" />
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="/sunrise-productions/favicon.svg"
+        />
+        <title>Sunrise Productions — Games & Software</title>
 
-    <!-- Open Graph -->
-    <meta property="og:title"       content="Sunrise Productions" />
-    <meta property="og:description" content="Indie game and software studio from Cali, Colombia." />
-    <meta property="og:type"        content="website" />
-    <meta property="og:url"         content="https://jdr2v.github.io/sunrise-productions" />
+        <!-- Open Graph -->
+        <meta property="og:title" content="Sunrise Productions" />
+        <meta
+            property="og:description"
+            content="Indie game and software studio from Cali, Colombia."
+        />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://jdr2v.github.io/sunrise-productions"
+        />
 
-    <!-- Inline theme init (no flash) -->
-    <script is:inline>
-      (function () {
-        const saved = localStorage.getItem("sp-theme");
-        const dark  = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-      })();
-    </script>
-  </head>
+        <!-- Inline theme init (no flash) -->
+        <script is:inline>
+            (function () {
+                const saved = localStorage.getItem("sp-theme");
+                const dark = saved
+                    ? saved === "dark"
+                    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    dark ? "dark" : "light",
+                );
+            })();
+        </script>
+    </head>
 
-  <body>
-    <Nav     lang={defaultLang} />
-    <main id="main">
-      <Hero     lang={defaultLang} />
-      <Projects lang={defaultLang} />
-      <Mission  lang={defaultLang} />
-      <Contact  lang={defaultLang} />
-    </main>
-    <Footer lang={defaultLang} />
+    <body>
+        <Nav lang={defaultLang} />
+        <main id="main">
+            <Hero lang={defaultLang} />
+            <Projects lang={defaultLang} />
+            <Mission lang={defaultLang} />
+            <Contact lang={defaultLang} />
+        </main>
+        <Footer lang={defaultLang} />
 
-    <!-- i18n client-side swap -->
-    <script>
-      import { translations } from "../i18n/translations";
-      import type { Lang }    from "../i18n/translations";
+        <!-- i18n client-side swap -->
+        <script>
+            import { translations } from "../i18n/translations";
+            import type { Lang } from "../i18n/translations";
 
-      type TranslationLeaf = string;
-      type TranslationNode = { [key: string]: TranslationNode | TranslationLeaf };
+            type TranslationLeaf = string;
+            type TranslationNode = {
+                [key: string]: TranslationNode | TranslationLeaf;
+            };
 
-      function getVal(obj: TranslationNode, path: string): string {
-        return path.split(".").reduce<TranslationNode | TranslationLeaf>((acc, k) => {
-          if (typeof acc === "object" && acc !== null) return acc[k];
-          return acc;
-        }, obj) as string ?? "";
-      }
+            function getVal(obj: TranslationNode, path: string): string {
+                return (
+                    (path
+                        .split(".")
+                        .reduce<TranslationNode | TranslationLeaf>((acc, k) => {
+                            if (typeof acc === "object" && acc !== null)
+                                return acc[k];
+                            return acc;
+                        }, obj) as string) ?? ""
+                );
+            }
 
-      function applyTranslations(lang: Lang) {
-        document.documentElement.lang = lang;
-        const t = translations[lang] as unknown as TranslationNode;
+            function applyTranslations(lang: Lang) {
+                document.documentElement.lang = lang;
+                const t = translations[lang] as unknown as TranslationNode;
 
-        // Swap [data-i18n] text nodes
-        document.querySelectorAll<HTMLElement>("[data-i18n]").forEach(el => {
-          const key = el.getAttribute("data-i18n")!;
-          const val = getVal(t, key);
-          if (val) el.textContent = val;
-        });
+                // Swap [data-i18n] text nodes
+                document
+                    .querySelectorAll<HTMLElement>("[data-i18n]")
+                    .forEach((el) => {
+                        const key = el.getAttribute("data-i18n")!;
+                        const val = getVal(t, key);
+                        if (val) el.textContent = val;
+                    });
 
-        // Swap featured badge text
-        document.querySelectorAll<HTMLElement>("[data-i18n-featured]").forEach(el => {
-          el.textContent = lang === "es" ? "DESTACADO" : "FEATURED";
-        });
-        document.querySelectorAll<HTMLElement>("[data-i18n-featured-badge]").forEach(el => {
-          el.textContent = lang === "es" ? "Destacado" : "Featured";
-        });
+                // Swap featured badge text
+                document
+                    .querySelectorAll<HTMLElement>("[data-i18n-featured]")
+                    .forEach((el) => {
+                        el.textContent =
+                            lang === "es" ? "DESTACADO" : "FEATURED";
+                    });
+                document
+                    .querySelectorAll<HTMLElement>("[data-i18n-featured-badge]")
+                    .forEach((el) => {
+                        el.textContent =
+                            lang === "es" ? "Destacado" : "Featured";
+                    });
 
-        // Swap project descriptions — items array
-        const items = translations[lang].projects.items;
-        items.forEach(item => {
-          const el = document.querySelector<HTMLElement>(`[data-id="desc-${item.id}"]`);
-          if (el) el.textContent = item.desc;
-        });
+                // Swap project descriptions — items array
+                const items = translations[lang].projects.items;
+                items.forEach((item) => {
+                    const el = document.querySelector<HTMLElement>(
+                        `[data-id="desc-${item.id}"]`,
+                    );
+                    if (el) el.textContent = item.desc;
+                });
 
-        // Swap input placeholders
-        const nameInput = document.getElementById("name") as HTMLInputElement | null;
-        const emailInput = document.getElementById("email") as HTMLInputElement | null;
-        const msgArea   = document.getElementById("message") as HTMLTextAreaElement | null;
-        if (nameInput)  nameInput.placeholder  = translations[lang].contact.namePlaceholder;
-        if (emailInput) emailInput.placeholder = translations[lang].contact.emailPlaceholder;
-        if (msgArea)    msgArea.placeholder    = translations[lang].contact.messagePlaceholder;
-      }
+                // Swap input placeholders
+                const nameInput = document.getElementById(
+                    "name",
+                ) as HTMLInputElement | null;
+                const emailInput = document.getElementById(
+                    "email",
+                ) as HTMLInputElement | null;
+                const msgArea = document.getElementById(
+                    "message",
+                ) as HTMLTextAreaElement | null;
+                if (nameInput)
+                    nameInput.placeholder =
+                        translations[lang].contact.namePlaceholder;
+                if (emailInput)
+                    emailInput.placeholder =
+                        translations[lang].contact.emailPlaceholder;
+                if (msgArea)
+                    msgArea.placeholder =
+                        translations[lang].contact.messagePlaceholder;
+            }
 
-      // Apply on lang event from Nav
-      document.addEventListener("sp:lang", (e: Event) => {
-        applyTranslations((e as CustomEvent<Lang>).detail);
-      });
+            // Apply on lang event from Nav
+            document.addEventListener("sp:lang", (e: Event) => {
+                applyTranslations((e as CustomEvent<Lang>).detail);
+            });
 
-      // Apply saved lang on load
-      const savedLang = (localStorage.getItem("sp-lang") as Lang) ?? "es";
-      applyTranslations(savedLang);
-    </script>
-  </body>
+            // Apply saved lang on load
+            const savedLang = (localStorage.getItem("sp-lang") as Lang) ?? "es";
+            applyTranslations(savedLang);
+        </script>
+    </body>
 </html>
